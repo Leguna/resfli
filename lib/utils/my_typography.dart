@@ -8,6 +8,7 @@ class MyTypography {
         height: 28 / 21,
         color: color ?? Colors.black,
       );
+
   static TextStyle? headerSubtitle({color}) => TextStyle(
         fontFamily: FontFamily.maisonNeueBold,
         fontSize: 21,
@@ -15,17 +16,23 @@ class MyTypography {
         color: color ?? Colors.black,
       );
 
-  static TextStyle? buttonTextStyle({color}) => TextStyle(
-        fontFamily: FontFamily.maisonNeueDemi,
+  static TextStyle? contentBoldNormal({color}) => TextStyle(
         fontSize: 16,
-        height: 20 / 16,
+        fontFamily: FontFamily.maisonNeueBold,
+        fontWeight: FontWeight.bold,
         color: color ?? Colors.black,
       );
 
-  static TextStyle? smallButtonTextStyle({color}) => TextStyle(
-        fontFamily: FontFamily.maisonNeueDemi,
+  static TextStyle? contentBoldLarge({color}) => TextStyle(
+        fontSize: 24,
+        fontFamily: FontFamily.maisonNeueBold,
+        fontWeight: FontWeight.bold,
+        color: color ?? Colors.black,
+      );
+
+  static TextStyle? buttonSmall({color}) => TextStyle(
         fontSize: 12,
-        height: 14 / 12,
+        fontFamily: FontFamily.maisonNeueBook,
         color: color ?? Colors.black,
       );
 }

@@ -39,7 +39,7 @@ class Restaurant {
     this.pictureId,
     this.city,
     this.rating,
-    this.menus,
+    required this.menus,
   });
 
   String? id;
@@ -48,7 +48,7 @@ class Restaurant {
   String? pictureId;
   String? city;
   double? rating;
-  Menus? menus;
+  Menus menus;
 
   Restaurant copyWith({
     required String id,
@@ -86,7 +86,7 @@ class Restaurant {
         "pictureId": pictureId,
         "city": city,
         "rating": rating,
-        "menus": menus?.toJson(),
+        "menus": menus.toJson(),
       };
 }
 

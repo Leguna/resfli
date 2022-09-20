@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
-import 'package:resfli/data/repository.dart';
-import 'package:resfli/widget/home.dart';
+import 'package:resfli/index.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -16,12 +15,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var repo = Repository();
     return GetMaterialApp(
       title: 'Resfli',
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: Home(repository: Repository()),
+      home: Home(repository: repo),
+      getPages: [
+        GetPage(
+            name: homeRoute,
+            page: () => Home(repository: repo),
+            transition: Transition.fade),
+        GetPage(
+            name: detailRoute,
+            page: () => const DetailPage(),
+            transition: Transition.fade),
+      ],
     );
   }
 }
