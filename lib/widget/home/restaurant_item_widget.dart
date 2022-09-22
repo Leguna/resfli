@@ -21,11 +21,14 @@ class RestaurantItemWidget extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  "${restaurant.pictureId}",
-                  fit: BoxFit.cover,
-                  width: 120,
-                  height: 80,
+                child: Hero(
+                  tag: "${restaurant.pictureId}",
+                  child: Image.network(
+                    "${restaurant.pictureId}",
+                    fit: BoxFit.cover,
+                    width: 120,
+                    height: 80,
+                  ),
                 ),
               ),
             ),

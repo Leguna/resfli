@@ -13,7 +13,7 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   var restaurant = Get.arguments as Restaurant;
-  final _isReadmore = false.obs;
+  final _isReadMore = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +28,12 @@ class _DetailPageState extends State<DetailPage> {
                 "${restaurant.name}",
                 overflow: TextOverflow.ellipsis,
               ),
-              background: Image.network(
-                "${restaurant.pictureId}",
-                fit: BoxFit.cover,
+              background: Hero(
+                tag: "${restaurant.pictureId}",
+                child: Image.network(
+                  "${restaurant.pictureId}",
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
@@ -59,17 +62,17 @@ class _DetailPageState extends State<DetailPage> {
                   Obx(
                     () => Text(
                       "${restaurant.description}",
-                      maxLines: _isReadmore.value ? null : 5,
+                      maxLines: _isReadMore.value ? null : 5,
                       overflow: TextOverflow.fade,
                     ),
                   ),
                   Obx(
                     () => TextButton(
                       onPressed: () {
-                        _isReadmore.value = !_isReadmore.value;
+                        _isReadMore.value = !_isReadMore.value;
                       },
                       child: Text(
-                        _isReadmore.value ? "Read less" : "Read more",
+                        _isReadMore.value ? "Read less" : "Read more",
                         style: MyTypography.buttonSmall(),
                       ),
                     ),

@@ -24,13 +24,15 @@ class MyApp extends StatelessWidget {
       home: Home(repository: repo),
       getPages: [
         GetPage(
-            name: homeRoute,
-            page: () => Home(repository: repo),
-            transition: Transition.fade),
+          name: homeRoute,
+          page: () => Home(repository: repo),
+          transition: Transition.fade,
+        ),
         GetPage(
-            name: detailRoute,
-            page: () => const DetailPage(),
-            transition: Transition.fade),
+          name: detailRoute,
+          page: () => const DetailPage(),
+          transition: Transition.fade,
+        ),
       ],
     );
   }
