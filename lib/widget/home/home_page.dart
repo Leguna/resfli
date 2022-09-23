@@ -1,23 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:resfli/index.dart';
+import 'package:resfli/network/models/get_list_restaurant_response.dart';
+import 'package:resfli/network/restaurant_service.dart';
+import 'package:resfli/widget/search/search_page.dart';
 
 const homeRoute = '/';
 
-class Home extends StatefulWidget {
-  const Home({Key? key, required this.repository}) : super(key: key);
+class Home extends StatelessWidget {
+  Home({Key? key}) : super(key: key);
 
-  final Repository repository;
+  final RestaurantService restaurantService = Get.find();
 
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Resfli')),
+      appBar: AppBar(
+        title: const Text('Resfli'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              Get.toNamed(searchRoute);
+            },
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,25 +38,28 @@ class _HomeState extends State<Home> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
               child: Text(
                 "Recommendation for you",
                 style: Get.textTheme.titleMedium,
               ),
             ),
-            const SizedBox(height: 8),
             FutureBuilder(
-              future: widget.repository.getRestaurantList(),
+              future: restaurantService.getListRestaurant(),
               builder: (context, snap) {
                 return Column(
                   children: [
                     if (snap.hasData)
-                      for (var restaurant in (snap.data as RestaurantListModel)
-                          .restaurants) ...[
+                      for (var restaurant
+                          in (snap.data as GetListRestaurantResponse)
+                              .restaurants) ...[
                         RestaurantItemWidget(restaurant: restaurant)
                       ]
                     else
-                      const Text("Loading..."),
+                      const Padding(
+                        padding: EdgeInsets.all(32.0),
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
                   ],
                 );
               },

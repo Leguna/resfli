@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:resfli/index.dart';
+import 'package:resfli/network/models/get_list_restaurant_response.dart';
 
 class RestaurantItemWidget extends StatelessWidget {
   const RestaurantItemWidget({Key? key, required this.restaurant})
