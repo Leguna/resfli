@@ -222,7 +222,7 @@ class _DetailPageState extends State<DetailPage> {
                     }
                   }),
                   Obx(() {
-                    if (!isError.value)
+                    if (!isError.value) {
                       return Form(
                         key: _formKey,
                         child: Column(
@@ -270,7 +270,8 @@ class _DetailPageState extends State<DetailPage> {
                           ],
                         ),
                       );
-                    return SizedBox();
+                    }
+                    return const SizedBox();
                   }),
                   const SizedBox(height: 600),
                 ],
