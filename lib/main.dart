@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:resfli/index.dart';
 import 'package:resfli/network/restaurant_service.dart';
@@ -22,29 +23,34 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Resfli',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: Home(),
-      getPages: [
-        GetPage(
-          name: homeRoute,
-          page: () => Home(),
-          transition: Transition.fade,
-        ),
-        GetPage(
-          name: detailRoute,
-          page: () => const DetailPage(),
-          transition: Transition.fade,
-        ),
-        GetPage(
-          name: searchRoute,
-          page: () => SearchPage(),
-          transition: Transition.fade,
-        ),
-      ],
+    return ScreenUtilInit(
+      designSize: const Size(360, 640),
+      builder: (context, child) {
+        return GetMaterialApp(
+          title: 'Resfli',
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+          ),
+          home: Home(),
+          getPages: [
+            GetPage(
+              name: homeRoute,
+              page: () => Home(),
+              transition: Transition.fade,
+            ),
+            GetPage(
+              name: detailRoute,
+              page: () => const DetailPage(),
+              transition: Transition.fade,
+            ),
+            GetPage(
+              name: searchRoute,
+              page: () => SearchPage(),
+              transition: Transition.fade,
+            ),
+          ],
+        );
+      },
     );
   }
 }

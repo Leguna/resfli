@@ -35,4 +35,15 @@ class MyTypography {
         fontFamily: FontFamily.maisonNeueBook,
         color: color ?? Colors.black,
       );
+  static TextStyle? contentNormal({color}) => TextStyle(
+        fontSize: 14,
+        fontFamily: FontFamily.maisonNeueBook,
+        color: color ?? Colors.black,
+      );
+
+  static TextStyle? contentSmall({color}) => TextStyle(
+        fontSize: 12,
+        fontFamily: FontFamily.maisonNeueBook,
+        color: color ?? Colors.black,
+      );
 }

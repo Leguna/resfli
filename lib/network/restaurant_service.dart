@@ -22,7 +22,7 @@ class RestaurantService extends GetxService {
       listRestaurant = GetListRestaurantResponse.fromJson(response.data);
     } on DioError catch (e) {
       if (e.response != null) {
-        return listRestaurant;
+        return GetListRestaurantResponse.fromJson(e.response!.data);
       } else {
         rethrow;
       }
@@ -60,7 +60,7 @@ class RestaurantService extends GetxService {
       searchRestaurant = SearchRestaurantResponse.fromJson(response.data);
     } on DioError catch (e) {
       if (e.response != null) {
-        return SearchRestaurantResponse();
+        return SearchRestaurantResponse.fromJson(e.response!.data);
       } else {
         rethrow;
       }
@@ -86,7 +86,7 @@ class RestaurantService extends GetxService {
       addNewReview = AddNewReviewResponse.fromJson(response.data);
     } on DioError catch (e) {
       if (e.response != null) {
-        return AddNewReviewResponse();
+        return AddNewReviewResponse.fromJson(e.response!.data);
       } else {
         rethrow;
       }

@@ -57,7 +57,7 @@ class RestaurantDetail {
     this.address,
     this.pictureId,
     this.categories,
-    required this.menus,
+    this.menus,
     this.rating,
     this.customerReviews,
   });
@@ -69,7 +69,7 @@ class RestaurantDetail {
   String? address;
   String? pictureId;
   List<Category>? categories;
-  Menus menus;
+  Menus? menus;
   double? rating;
   List<CustomerReview?>? customerReviews;
 
@@ -130,7 +130,7 @@ class RestaurantDetail {
         "categories": categories == null
             ? null
             : List<dynamic>.from(categories!.map((x) => x.toJson())),
-        "menus": menus.toJson(),
+        "menus": menus?.toJson() ?? Menus().toJson(),
         "rating": rating,
         "customerReviews": customerReviews == null
             ? null

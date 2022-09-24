@@ -16,28 +16,33 @@ class SearchRestaurantResponse {
   SearchRestaurantResponse({
     this.error,
     this.founded,
+    this.message,
     this.restaurants,
   });
 
   bool? error;
   int? founded;
+  String? message;
   List<Restaurant>? restaurants;
 
   SearchRestaurantResponse copyWith({
     bool? error,
     int? founded,
+    String? message,
     List<Restaurant>? restaurants,
   }) =>
       SearchRestaurantResponse(
         error: error ?? this.error,
         founded: founded ?? this.founded,
+        message: message ?? this.message,
         restaurants: restaurants ?? this.restaurants,
       );
 
   factory SearchRestaurantResponse.fromJson(Map<String, dynamic> json) =>
       SearchRestaurantResponse(
         error: json["error"] ?? '',
-        founded: json["founded"] ?? '',
+        founded: json["founded"] ?? 0,
+        message: json["message"] ?? '',
         restaurants: json["restaurants"] == null
             ? null
             : List<Restaurant>.from(
@@ -46,6 +51,7 @@ class SearchRestaurantResponse {
 
   Map<String, dynamic> toJson() => {
         "error": error ?? "",
+        "message": message ?? "",
         "founded": founded ?? "",
         "restaurants": restaurants == null
             ? null
