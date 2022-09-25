@@ -3,6 +3,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:resfli/index.dart';
+import 'package:resfli/network/api_service.dart';
 import 'package:resfli/network/restaurant_service.dart';
 import 'package:resfli/widget/search/search_page.dart';
 
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 640),
       builder: (context, child) {
         return GetMaterialApp(
+          navigatorKey: ApiService.alice.getNavigatorKey(),
           title: 'Resfli',
           theme: ThemeData(
             primarySwatch: Colors.green,

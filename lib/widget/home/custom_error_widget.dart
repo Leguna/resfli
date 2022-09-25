@@ -12,8 +12,8 @@ class CustomErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 0.3.sh,
-      width: 1.sh,
+      height: 150.w,
+      width: 1.sw,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

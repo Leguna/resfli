@@ -10,6 +10,7 @@ import 'package:resfli/network/models/search_restaurant_response.dart';
 
 class RestaurantService extends GetxService {
   final Dio _dio = ApiService.createDio();
+  final _errorMessage = "Error! Check your Connection!";
 
   Future<GetListRestaurantResponse?> getListRestaurant({
     int page = 1,
@@ -24,7 +25,11 @@ class RestaurantService extends GetxService {
       if (e.response != null) {
         return GetListRestaurantResponse.fromJson(e.response!.data);
       } else {
-        rethrow;
+        return GetListRestaurantResponse(
+          error: true,
+          message: _errorMessage,
+          restaurants: [],
+        );
       }
     }
     return listRestaurant;
@@ -43,7 +48,11 @@ class RestaurantService extends GetxService {
       if (e.response != null) {
         return GetDetailRestaurantResponse();
       } else {
-        rethrow;
+        return GetDetailRestaurantResponse(
+          error: true,
+          message: _errorMessage,
+          restaurant: RestaurantDetail(),
+        );
       }
     }
     return detailRestaurant;
@@ -62,7 +71,11 @@ class RestaurantService extends GetxService {
       if (e.response != null) {
         return SearchRestaurantResponse.fromJson(e.response!.data);
       } else {
-        rethrow;
+        return SearchRestaurantResponse(
+          error: true,
+          message: _errorMessage,
+          restaurants: [],
+        );
       }
     }
     return searchRestaurant;
@@ -88,7 +101,11 @@ class RestaurantService extends GetxService {
       if (e.response != null) {
         return AddNewReviewResponse.fromJson(e.response!.data);
       } else {
-        rethrow;
+        return AddNewReviewResponse(
+          error: true,
+          message: _errorMessage,
+          customerReviews: [],
+        );
       }
     }
     return addNewReview;

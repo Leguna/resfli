@@ -6,9 +6,7 @@ import 'package:resfli/index.dart';
 class ApiService {
   final dio = createDio();
   final tokenDio = Dio(BaseOptions(baseUrl: StringConsts.baseUrl));
-  static Alice alice = Alice(
-    showNotification: true,
-  );
+  static Alice alice = Alice(showNotification: true);
 
   ApiService._internal();
 
