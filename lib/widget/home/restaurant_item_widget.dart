@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:resfli/index.dart';
-import 'package:resfli/network/models/get_list_restaurant_response.dart';
 
 class RestaurantItemWidget extends StatelessWidget {
-  const RestaurantItemWidget({Key? key, required this.restaurant})
-      : super(key: key);
+  const RestaurantItemWidget({
+    Key? key,
+    required this.restaurant,
+    required this.callback,
+  }) : super(key: key);
 
+  final Function() callback;
   final Restaurant restaurant;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed(detailRoute, arguments: restaurant),
+      onTap: callback,
       child: Card(
         margin: const EdgeInsets.all(8),
         child: Row(
@@ -25,7 +27,7 @@ class RestaurantItemWidget extends StatelessWidget {
                 child: Hero(
                   tag: "${restaurant.pictureId}",
                   child: Image.network(
-                    "${restaurant.pictureId}",
+                    "https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}",
                     fit: BoxFit.cover,
                     width: 120,
                     height: 80,

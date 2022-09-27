@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:resfli/network/models/get_list_restaurant_response.dart';
-import 'package:resfli/network/restaurant_service.dart';
-import 'package:resfli/widget/home/custom_error_widget.dart';
-import 'package:resfli/widget/home/restaurant_item_widget.dart';
+import 'package:resfli/index.dart';
 
 const searchRoute = '/search';
 
@@ -51,7 +48,10 @@ class SearchPage extends StatelessWidget {
             Obx(() => Column(
                   children: [
                     for (var restaurant in searchResult)
-                      RestaurantItemWidget(restaurant: restaurant),
+                      RestaurantItemWidget(
+                        restaurant: restaurant,
+                        callback: () {},
+                      ),
                     if (searchResult.isEmpty &&
                         !isLoading.value &&
                         !isError.value)

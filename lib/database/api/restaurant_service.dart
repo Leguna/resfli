@@ -2,11 +2,7 @@ import 'dart:core';
 
 import 'package:dio/dio.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:resfli/network/api_service.dart';
-import 'package:resfli/network/models/add_new_review_response.dart';
-import 'package:resfli/network/models/get_detail_restaurant_response.dart';
-import 'package:resfli/network/models/get_list_restaurant_response.dart';
-import 'package:resfli/network/models/search_restaurant_response.dart';
+import 'package:resfli/index.dart';
 
 class RestaurantService extends GetxService {
   final Dio _dio = ApiService.createDio();
@@ -51,7 +47,7 @@ class RestaurantService extends GetxService {
         return GetDetailRestaurantResponse(
           error: true,
           message: _errorMessage,
-          restaurant: RestaurantDetail(),
+          restaurant: Restaurant(),
         );
       }
     }

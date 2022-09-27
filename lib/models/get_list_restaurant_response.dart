@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:resfli/models/index.dart';
+
 GetListRestaurantResponse getListRestaurantFromJson(String str) =>
     GetListRestaurantResponse.fromJson(json.decode(str));
 
@@ -52,60 +54,5 @@ class GetListRestaurantResponse {
         "message": message,
         "count": count,
         "restaurants": List<dynamic>.from(restaurants.map((x) => x.toJson())),
-      };
-}
-
-class Restaurant {
-  Restaurant({
-    this.id,
-    this.name,
-    this.description,
-    this.pictureId,
-    this.city,
-    this.rating,
-  });
-
-  String? id;
-  String? name;
-  String? description;
-  String? pictureId;
-  String? city;
-  double? rating;
-
-  Restaurant copyWith({
-    String? id,
-    String? name,
-    String? description,
-    String? pictureId,
-    String? city,
-    double? rating,
-  }) =>
-      Restaurant(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        pictureId: pictureId ?? this.pictureId,
-        city: city ?? this.city,
-        rating: rating ?? this.rating,
-      );
-
-  factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
-        id: json["id"] ?? "",
-        name: json["name"] ?? "",
-        description: json["description"] ?? "",
-        pictureId:
-            "https://restaurant-api.dicoding.dev/images/small/${json["pictureId"]}",
-        city: json["city"] ?? "",
-        rating:
-            json["rating"] == null ? null : json["rating"].toDouble() ?? 0.0,
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id ?? "",
-        "name": name ?? "",
-        "description": description ?? "",
-        "pictureId": pictureId ?? "",
-        "city": city ?? "",
-        "rating": rating ?? 0.0,
       };
 }

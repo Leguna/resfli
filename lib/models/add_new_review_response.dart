@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:resfli/network/models/get_detail_restaurant_response.dart';
+import 'package:resfli/index.dart';
 
 AddNewReviewResponse addNewReviewResponseFromJson(String str) =>
     AddNewReviewResponse.fromJson(json.decode(str));

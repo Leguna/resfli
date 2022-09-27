@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:resfli/network/models/get_list_restaurant_response.dart';
+import 'package:resfli/models/index.dart';
 
 SearchRestaurantResponse searchRestaurantResponseFromJson(String str) =>
     SearchRestaurantResponse.fromJson(json.decode(str));

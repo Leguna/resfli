@@ -1,38 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:resfli/index.dart';
-import 'package:resfli/network/models/get_detail_restaurant_response.dart';
-import 'package:resfli/network/models/get_list_restaurant_response.dart';
-import 'package:resfli/network/restaurant_service.dart';
-import 'package:resfli/widget/home/custom_error_widget.dart';
 
 const detailRoute = '/details';
 
-class DetailPage extends StatefulWidget {
-  const DetailPage({Key? key}) : super(key: key);
-
-  @override
-  State<DetailPage> createState() => _DetailPageState();
-}
-
-class _DetailPageState extends State<DetailPage> {
-  final restaurant = Get.arguments as Restaurant;
-  final restaurantService = Get.find<RestaurantService>();
-  final _isReadMore = false.obs;
+class DetailPage extends GetView<DetailRestaurantController> {
+  DetailPage({Key? key}) : super(key: key);
 
   final _reviewTextController = TextEditingController();
   final _nameController = TextEditingController();
-
-  final detailRestaurant = RestaurantDetail().obs;
-  final customerReviews = <CustomerReview?>[].obs;
-  final isLoading = false.obs;
-  final isError = false.obs;
-  final errorText = "Error! Check Your Connection.".obs;
   final _formKey = GlobalKey<FormState>();
+  final _isReadMore = false.obs;
 
   @override
   Widget build(BuildContext context) {
-    getDetailRestaurant(restaurant.id ?? "");
+    Get.put(DetailRestaurantController());
+    final FavoriteController favoriteController = Get.put(FavoriteController());
+    favoriteController.checkFavorite(controller.restaurant);
+    getDetailRestaurant(controller.restaurant.id ?? "");
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -41,15 +26,26 @@ class _DetailPageState extends State<DetailPage> {
             pinned: true,
             actions: [
               IconButton(
-                onPressed: () => getDetailRestaurant(restaurant.id ?? ''),
+                onPressed: () =>
+                    getDetailRestaurant(controller.restaurant.id ?? ''),
                 icon: const Icon(Icons.refresh),
+              ),
+              Obx(
+                () => IconButton(
+                  onPressed: () {
+                    favoriteController
+                        .toggleFavorite(controller.detailRestaurant.value);
+                  },
+                  icon: Icon(
+                    favoriteController.isFavorite.value
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                  ),
+                ),
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                "${restaurant.name}",
-                overflow: TextOverflow.ellipsis,
-              ),
+              title: Text(controller.restaurant.name ?? ""),
               background: Container(
                 foregroundDecoration: const BoxDecoration(
                   gradient: LinearGradient(
@@ -65,9 +61,9 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                 ),
                 child: Hero(
-                  tag: "${restaurant.pictureId}",
+                  tag: "${controller.restaurant.pictureId}",
                   child: Image.network(
-                    "${restaurant.pictureId}",
+                    "https://restaurant-api.dicoding.dev/images/medium/${controller.restaurant.pictureId}",
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -84,7 +80,7 @@ class _DetailPageState extends State<DetailPage> {
                     children: [
                       const Icon(Icons.location_on),
                       const SizedBox(width: 8),
-                      Text("${restaurant.city}"),
+                      Text("${controller.restaurant.city}"),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -92,13 +88,13 @@ class _DetailPageState extends State<DetailPage> {
                     children: [
                       const Icon(Icons.star),
                       const SizedBox(width: 8),
-                      Text('${restaurant.rating}'),
+                      Text('${controller.restaurant.rating}'),
                     ],
                   ),
                   const SizedBox(height: 8),
                   Obx(
                     () => Text(
-                      "${restaurant.description}",
+                      "${controller.restaurant.description}",
                       maxLines: _isReadMore.value ? null : 5,
                       overflow: TextOverflow.fade,
                     ),
@@ -116,12 +112,12 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                   const SizedBox(height: 8),
                   Obx(() {
-                    if (isError.value) {
+                    if (controller.isError.value) {
                       return CustomErrorWidget(
-                        message: errorText.value,
+                        message: controller.errorText.value,
                       );
                     } else {
-                      if (isLoading.value) {
+                      if (controller.isLoading.value) {
                         return const Center(
                           child: CircularProgressIndicator(),
                         );
@@ -138,7 +134,8 @@ class _DetailPageState extends State<DetailPage> {
                             SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
-                                children: detailRestaurant.value.menus?.foods
+                                children: controller
+                                        .detailRestaurant.value.menus?.foods
                                         ?.map(
                                           (e) => Container(
                                             margin:
@@ -164,7 +161,8 @@ class _DetailPageState extends State<DetailPage> {
                             SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
-                                children: detailRestaurant.value.menus?.drinks
+                                children: controller
+                                        .detailRestaurant.value.menus?.drinks
                                         ?.map(
                                           (e) => Container(
                                             margin:
@@ -188,7 +186,7 @@ class _DetailPageState extends State<DetailPage> {
                               style: MyTypography.contentBoldNormal(),
                             ),
                             const SizedBox(height: 8),
-                            for (var review in customerReviews)
+                            for (var review in controller.customerReviews)
                               Container(
                                 margin: const EdgeInsets.only(bottom: 8),
                                 padding: const EdgeInsets.all(8),
@@ -222,7 +220,7 @@ class _DetailPageState extends State<DetailPage> {
                     }
                   }),
                   Obx(() {
-                    if (!isError.value) {
+                    if (!controller.isError.value) {
                       return Form(
                         key: _formKey,
                         child: Column(
@@ -253,7 +251,7 @@ class _DetailPageState extends State<DetailPage> {
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       addReviewRestaurant(
-                                        restaurant.id ?? "",
+                                        controller.restaurant.id ?? "",
                                         _nameController.text,
                                         _reviewTextController.text,
                                       );
@@ -284,28 +282,30 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   void getDetailRestaurant(String id) {
-    isLoading.value = true;
-    isError.value = false;
-    restaurantService.getDetailRestaurant(id: id).then(
+    controller.isLoading.value = true;
+    controller.isError.value = false;
+    controller.restaurantService.getDetailRestaurant(id: id).then(
       (value) {
         if (value.error != null) {
           if (value.error!) {
-            isError.value = true;
-            errorText.value = value.message ?? "";
-            detailRestaurant.value = RestaurantDetail();
+            controller.isError.value = true;
+            controller.errorText.value = value.message ?? "";
+            controller.detailRestaurant.value = Restaurant();
           } else {
-            isError.value = false;
-            detailRestaurant.value = value.restaurant ?? RestaurantDetail();
-            customerReviews.value = value.restaurant?.customerReviews ?? [];
+            controller.isError.value = false;
+            controller.detailRestaurant.value =
+                value.restaurant ?? Restaurant();
+            controller.customerReviews.value =
+                value.restaurant?.customerReviews ?? [];
           }
         }
-        isLoading.value = false;
+        controller.isLoading.value = false;
       },
     ).onError((error, stackTrace) {
-      isError.value = true;
-      errorText.value = "";
-      detailRestaurant.value = RestaurantDetail();
-      isLoading.value = false;
+      controller.isError.value = true;
+      controller.errorText.value = "";
+      controller.detailRestaurant.value = Restaurant();
+      controller.isLoading.value = false;
     });
   }
 
@@ -314,25 +314,27 @@ class _DetailPageState extends State<DetailPage> {
     String name,
     String review,
   ) {
-    isLoading.value = true;
-    isError.value = false;
-    restaurantService.addNewReview(id: id, name: name, review: review).then(
+    controller.isLoading.value = true;
+    controller.isError.value = false;
+    controller.restaurantService
+        .addNewReview(id: id, name: name, review: review)
+        .then(
       (value) {
         if (value.error != null) {
           if (value.error!) {
-            isError.value = true;
-            errorText.value = value.message ?? "";
+            controller.isError.value = true;
+            controller.errorText.value = value.message ?? "";
           } else {
-            isError.value = false;
-            customerReviews.value = value.customerReviews ?? [];
+            controller.isError.value = false;
+            controller.customerReviews.value = value.customerReviews ?? [];
           }
         }
-        isLoading.value = false;
+        controller.isLoading.value = false;
       },
     ).onError((error, stackTrace) {
-      isError.value = true;
-      errorText.value = "";
-      isLoading.value = false;
+      controller.isError.value = true;
+      controller.errorText.value = "";
+      controller.isLoading.value = false;
     });
   }
 }

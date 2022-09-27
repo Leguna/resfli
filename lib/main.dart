@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:resfli/index.dart';
-import 'package:resfli/network/api_service.dart';
-import 'package:resfli/network/restaurant_service.dart';
-import 'package:resfli/widget/search/search_page.dart';
 
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await initServices();
   runApp(const MyApp());
-  FlutterNativeSplash.remove();
 }
 
 initServices() async {
-  Get.put(RestaurantService());
+  await GetStorage.init();
+  Get.lazyPut(() => RestaurantService());
+  Get.lazyPut(() => HomeController());
+  Get.lazyPut(() => FavoriteController());
+  FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
             ),
             GetPage(
               name: detailRoute,
-              page: () => const DetailPage(),
+              page: () => DetailPage(),
               transition: Transition.fade,
             ),
             GetPage(

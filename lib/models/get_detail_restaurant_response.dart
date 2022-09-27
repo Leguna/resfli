@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+
 GetDetailRestaurantResponse getDetailRestaurantFromJson(String str) =>
     GetDetailRestaurantResponse.fromJson(json.decode(str));
 
@@ -19,12 +21,12 @@ class GetDetailRestaurantResponse {
 
   bool? error;
   String? message;
-  RestaurantDetail? restaurant;
+  Restaurant? restaurant;
 
   GetDetailRestaurantResponse copyWith({
     bool? error,
     String? message,
-    RestaurantDetail? restaurant,
+    Restaurant? restaurant,
   }) =>
       GetDetailRestaurantResponse(
         error: error ?? this.error,
@@ -38,7 +40,7 @@ class GetDetailRestaurantResponse {
         message: json["message"] == null ? null : json["message"] ?? '',
         restaurant: json["restaurant"] == null
             ? null
-            : RestaurantDetail.fromJson(json["restaurant"]),
+            : Restaurant.fromJson(json["restaurant"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -48,8 +50,8 @@ class GetDetailRestaurantResponse {
       };
 }
 
-class RestaurantDetail {
-  RestaurantDetail({
+class Restaurant extends Equatable {
+  Restaurant({
     this.id,
     this.name,
     this.description,
@@ -73,7 +75,7 @@ class RestaurantDetail {
   double? rating;
   List<CustomerReview?>? customerReviews;
 
-  RestaurantDetail copyWith({
+  Restaurant copyWith({
     String? id,
     String? name,
     String? description,
@@ -85,7 +87,7 @@ class RestaurantDetail {
     double? rating,
     List<CustomerReview>? customerReviews,
   }) =>
-      RestaurantDetail(
+      Restaurant(
         id: id ?? this.id,
         name: name ?? this.name,
         description: description ?? this.description,
@@ -98,15 +100,13 @@ class RestaurantDetail {
         customerReviews: customerReviews ?? this.customerReviews,
       );
 
-  factory RestaurantDetail.fromJson(Map<String, dynamic> json) =>
-      RestaurantDetail(
+  factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
         id: json["id"] == null ? null : json["id"] ?? '',
         name: json["name"],
         description: json["description"],
         city: json["city"],
         address: json["address"],
-        pictureId:
-            "https://restaurant-api.dicoding.dev/images/small/${json["pictureId"]}",
+        pictureId: "${json["pictureId"]}",
         categories: json["categories"] == null
             ? null
             : List<Category>.from(
@@ -136,6 +136,9 @@ class RestaurantDetail {
             ? null
             : List<dynamic>.from(customerReviews!.map((x) => x!.toJson())),
       };
+
+  @override
+  List<Object?> get props => [id];
 }
 
 class Category {
