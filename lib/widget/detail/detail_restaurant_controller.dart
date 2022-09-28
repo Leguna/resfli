@@ -11,7 +11,7 @@ class DetailRestaurantController extends GetxController {
   final isError = false.obs;
   final errorText = "Error! Check Your Connection.".obs;
 
-  getDetailRestaurant(String id) async {
+  Future<GetDetailRestaurantResponse> getDetailRestaurant(String id) async {
     detailRestaurant.value = Restaurant();
     customerReviews.value = [];
     isLoading.value = true;
@@ -22,10 +22,13 @@ class DetailRestaurantController extends GetxController {
       customerReviews.value = response.restaurant?.customerReviews ?? [];
       errorText.value = response.error ?? false ? response.message ?? "" : "";
       isError.value = response.error ?? false;
+      isLoading.value = false;
+      return response;
     } catch (e) {
       isError.value = true;
+      isLoading.value = false;
     }
-    isLoading.value = false;
+    return GetDetailRestaurantResponse();
   }
 
   addNewReview(String id, String name, String review) async {

@@ -1,22 +1,39 @@
+import 'dart:io';
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:resfli/index.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 Future<void> main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await initServices();
   runApp(const MyApp());
 }
 
 initServices() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   await GetStorage.init();
   Get.lazyPut(() => RestaurantService());
   Get.lazyPut(() => HomeController());
   Get.lazyPut(() => FavoriteController());
+
+  final NotificationHelper notificationHelper = NotificationHelper();
+  final BackgroundService service = BackgroundService();
+  service.initializeIsolate();
+  if (Platform.isAndroid) {
+    await AndroidAlarmManager.initialize();
+  }
+  await notificationHelper.initNotifications(flutterLocalNotificationsPlugin);
+
   FlutterNativeSplash.remove();
 }
 
@@ -29,12 +46,12 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 640),
       builder: (context, child) {
         return GetMaterialApp(
-          navigatorKey: ApiService.alice.getNavigatorKey(),
           title: 'Resfli',
+          navigatorKey: Get.key,
           theme: ThemeData(
             primarySwatch: Colors.green,
           ),
-          home: Home(),
+          initialRoute: homeRoute,
           getPages: [
             GetPage(
               name: homeRoute,
@@ -49,6 +66,11 @@ class MyApp extends StatelessWidget {
             GetPage(
               name: searchRoute,
               page: () => SearchPage(),
+              transition: Transition.fade,
+            ),
+            GetPage(
+              name: settingsRoute,
+              page: () => SettingsPage(),
               transition: Transition.fade,
             ),
           ],

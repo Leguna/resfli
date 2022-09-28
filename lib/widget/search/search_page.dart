@@ -50,7 +50,9 @@ class SearchPage extends StatelessWidget {
                     for (var restaurant in searchResult)
                       RestaurantItemWidget(
                         restaurant: restaurant,
-                        callback: () {},
+                        callback: () {
+                          Get.toNamed(detailRoute, arguments: restaurant);
+                        },
                       ),
                     if (searchResult.isEmpty &&
                         !isLoading.value &&

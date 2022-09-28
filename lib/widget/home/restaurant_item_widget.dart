@@ -1,5 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:resfli/index.dart';
+import 'package:shimmer/shimmer.dart';
 
 class RestaurantItemWidget extends StatelessWidget {
   const RestaurantItemWidget({
@@ -26,8 +29,22 @@ class RestaurantItemWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 child: Hero(
                   tag: "${restaurant.pictureId}",
-                  child: Image.network(
-                    "https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}",
+                  child: CachedNetworkImage(
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    placeholder: (context, url) => SizedBox(
+                      width: Get.width,
+                      height: 300,
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.white,
+                        highlightColor: Colors.grey,
+                        child: Container(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    imageUrl:
+                        "https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}",
                     fit: BoxFit.cover,
                     width: 120,
                     height: 80,

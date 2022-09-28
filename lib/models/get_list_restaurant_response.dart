@@ -17,7 +17,7 @@ class GetListRestaurantResponse {
     this.error,
     this.message,
     this.count,
-    required this.restaurants,
+    this.restaurants = const [],
   });
 
   bool? error;

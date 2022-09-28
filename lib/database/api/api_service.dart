@@ -1,11 +1,9 @@
-import 'package:alice/alice.dart';
 import 'package:dio/dio.dart';
 import 'package:resfli/index.dart';
 
 class ApiService {
   final dio = createDio();
   final tokenDio = Dio(BaseOptions(baseUrl: StringConsts.baseUrl));
-  static Alice alice = Alice(showNotification: true);
 
   ApiService._internal();
 
@@ -25,7 +23,6 @@ class ApiService {
 
     dio.interceptors.addAll({
       AppInterceptors(dio),
-      alice.getDioInterceptor(),
     });
     return dio;
   }

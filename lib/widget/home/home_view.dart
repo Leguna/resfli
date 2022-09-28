@@ -5,11 +5,30 @@ import 'package:resfli/index.dart';
 
 const homeRoute = '/';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   final HomeController _homeController = Get.find();
+
   final FavoriteController _favoriteController = Get.find();
+  final NotificationHelper _notificationHelper = NotificationHelper();
+
+  @override
+  void initState() {
+    super.initState();
+    _notificationHelper.configureSelectNotificationSubject(detailRoute);
+  }
+
+  @override
+  void dispose() {
+    selectNotificationSubject.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +54,12 @@ class Home extends StatelessWidget {
               icon: const Icon(Icons.refresh),
               onPressed: () {
                 _refresh();
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () {
+                Get.toNamed(settingsRoute);
               },
             ),
           ],
@@ -69,7 +94,9 @@ class FavoriteList extends GetView<FavoriteController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.getFavorite();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => controller.getFavorite(),
+    );
     return HomePage(
       errorText: controller.errorText.value,
       isLoading: controller.isLoading.value,

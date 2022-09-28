@@ -1,23 +1,30 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:resfli/index.dart';
+import 'package:shimmer/shimmer.dart';
 
 const detailRoute = '/details';
 
-class DetailPage extends GetView<DetailRestaurantController> {
+class DetailPage extends StatelessWidget {
   DetailPage({Key? key}) : super(key: key);
-
   final _reviewTextController = TextEditingController();
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _isReadMore = false.obs;
+  final DetailRestaurantController controller =
+      Get.put(DetailRestaurantController());
 
   @override
   Widget build(BuildContext context) {
-    Get.put(DetailRestaurantController());
+    final DetailRestaurantController controller =
+        Get.put(DetailRestaurantController());
     final FavoriteController favoriteController = Get.put(FavoriteController());
     favoriteController.checkFavorite(controller.restaurant);
-    getDetailRestaurant(controller.restaurant.id ?? "");
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => getDetailRestaurant(controller.restaurant.id ?? ""),
+    );
+
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -62,8 +69,22 @@ class DetailPage extends GetView<DetailRestaurantController> {
                 ),
                 child: Hero(
                   tag: "${controller.restaurant.pictureId}",
-                  child: Image.network(
-                    "https://restaurant-api.dicoding.dev/images/medium/${controller.restaurant.pictureId}",
+                  child: CachedNetworkImage(
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    placeholder: (context, url) => SizedBox(
+                      width: Get.width,
+                      height: 300,
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.white,
+                        highlightColor: Colors.grey,
+                        child: Container(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    imageUrl:
+                        "https://restaurant-api.dicoding.dev/images/medium/${controller.restaurant.pictureId}",
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -281,32 +302,30 @@ class DetailPage extends GetView<DetailRestaurantController> {
     );
   }
 
-  void getDetailRestaurant(String id) {
+  void getDetailRestaurant(String id) async {
     controller.isLoading.value = true;
     controller.isError.value = false;
-    controller.restaurantService.getDetailRestaurant(id: id).then(
-      (value) {
-        if (value.error != null) {
-          if (value.error!) {
-            controller.isError.value = true;
-            controller.errorText.value = value.message ?? "";
-            controller.detailRestaurant.value = Restaurant();
-          } else {
-            controller.isError.value = false;
-            controller.detailRestaurant.value =
-                value.restaurant ?? Restaurant();
-            controller.customerReviews.value =
-                value.restaurant?.customerReviews ?? [];
-          }
+    try {
+      final value = await controller.getDetailRestaurant(id);
+      if (value.error != null) {
+        if (value.error!) {
+          controller.isError.value = true;
+          controller.errorText.value = value.message ?? "";
+          controller.detailRestaurant.value = Restaurant();
+        } else {
+          controller.isError.value = false;
+          controller.detailRestaurant.value = value.restaurant ?? Restaurant();
+          controller.customerReviews.value =
+              value.restaurant?.customerReviews ?? [];
         }
-        controller.isLoading.value = false;
-      },
-    ).onError((error, stackTrace) {
+      }
+      controller.isLoading.value = false;
+    } catch (e) {
       controller.isError.value = true;
       controller.errorText.value = "";
       controller.detailRestaurant.value = Restaurant();
       controller.isLoading.value = false;
-    });
+    }
   }
 
   void addReviewRestaurant(
