@@ -16,18 +16,10 @@ class $AssetsImagesGen {
   AssetGenImage get splash => const AssetGenImage('assets/images/splash.png');
 }
 
-class $AssetsJsonGen {
-  const $AssetsJsonGen();
-
-  /// File path: assets/json/local_restaurant.json
-  String get localRestaurant => 'assets/json/local_restaurant.json';
-}
-
 class Assets {
   Assets._();
 
   static const $AssetsImagesGen images = $AssetsImagesGen();
-  static const $AssetsJsonGen json = $AssetsJsonGen();
 }
 
 class AssetGenImage {

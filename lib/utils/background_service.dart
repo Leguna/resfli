@@ -24,12 +24,11 @@ class BackgroundService {
   }
 
   static Future<void> callback() async {
-    print('Alarm fired!');
     final NotificationHelper notificationHelper = NotificationHelper();
     var result = await RestaurantService().getListRestaurant();
     await notificationHelper.showNotification(
       flutterLocalNotificationsPlugin,
-      result ?? GetListRestaurantResponse(),
+      result,
     );
 
     _uiSendPort ??= IsolateNameServer.lookupPortByName(_isolateName);

@@ -12,13 +12,12 @@ class DetailPage extends StatelessWidget {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _isReadMore = false.obs;
-  final DetailRestaurantController controller =
-      Get.put(DetailRestaurantController());
+  final DetailRestaurantController controller = Get.put(
+      DetailRestaurantController(
+          restaurantService: Get.find(), restaurant: Get.arguments));
 
   @override
   Widget build(BuildContext context) {
-    final DetailRestaurantController controller =
-        Get.put(DetailRestaurantController());
     final FavoriteController favoriteController = Get.put(FavoriteController());
     favoriteController.checkFavorite(controller.restaurant);
     WidgetsBinding.instance.addPostFrameCallback(
@@ -311,10 +310,11 @@ class DetailPage extends StatelessWidget {
         if (value.error!) {
           controller.isError.value = true;
           controller.errorText.value = value.message ?? "";
-          controller.detailRestaurant.value = Restaurant();
+          controller.detailRestaurant.value = const Restaurant();
         } else {
           controller.isError.value = false;
-          controller.detailRestaurant.value = value.restaurant ?? Restaurant();
+          controller.detailRestaurant.value =
+              value.restaurant ?? const Restaurant();
           controller.customerReviews.value =
               value.restaurant?.customerReviews ?? [];
         }
@@ -323,7 +323,7 @@ class DetailPage extends StatelessWidget {
     } catch (e) {
       controller.isError.value = true;
       controller.errorText.value = "";
-      controller.detailRestaurant.value = Restaurant();
+      controller.detailRestaurant.value = const Restaurant();
       controller.isLoading.value = false;
     }
   }

@@ -6,16 +6,20 @@ import 'package:resfli/index.dart';
 const homeRoute = '/';
 
 class Home extends StatefulWidget {
-  Home({Key? key}) : super(key: key);
+  const Home({
+    Key? key,
+    required this.homeController,
+    required this.favoriteController,
+  }) : super(key: key);
+
+  final HomeController homeController;
+  final FavoriteController favoriteController;
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  final HomeController _homeController = Get.find();
-
-  final FavoriteController _favoriteController = Get.find();
   final NotificationHelper _notificationHelper = NotificationHelper();
 
   @override
@@ -66,9 +70,13 @@ class _HomeState extends State<Home> {
         ),
         body: TabBarView(
           children: [
-            RecommendedRestaurant(callback: _callback),
+            RecommendedRestaurant(
+              callback: _callback,
+              controller: widget.homeController,
+            ),
             FavoriteList(
               callback: _callback,
+              controller: widget.favoriteController,
             ),
           ],
         ),
@@ -82,14 +90,19 @@ class _HomeState extends State<Home> {
   }
 
   _refresh() {
-    _homeController.getRestaurant();
-    _favoriteController.getFavorite();
+    widget.homeController.getRestaurant();
+    widget.favoriteController.getFavorite();
   }
 }
 
-class FavoriteList extends GetView<FavoriteController> {
-  const FavoriteList({Key? key, required this.callback}) : super(key: key);
+class FavoriteList extends StatelessWidget {
+  const FavoriteList({
+    Key? key,
+    required this.callback,
+    required this.controller,
+  }) : super(key: key);
 
+  final FavoriteController controller;
   final Function(Restaurant restaurant) callback;
 
   @override
@@ -118,23 +131,29 @@ class FavoriteList extends GetView<FavoriteController> {
   }
 }
 
-class RecommendedRestaurant extends GetView<HomeController> {
-  const RecommendedRestaurant({Key? key, required this.callback})
-      : super(key: key);
+class RecommendedRestaurant extends StatelessWidget {
+  const RecommendedRestaurant({
+    Key? key,
+    required this.callback,
+    required this.controller,
+  }) : super(key: key);
 
+  final HomeController controller;
   final Function(Restaurant restaurant) callback;
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => HomePage(
-          body: RestaurantListWidget(
-            restaurantList: controller.restaurantList,
-            callback: callback,
-          ),
-          errorText: controller.errorText.value,
-          isLoading: controller.isLoading.value,
-          isError: controller.isError.value,
-        ));
+    return Obx(() {
+      return HomePage(
+        body: RestaurantListWidget(
+          restaurantList: controller.restaurantList,
+          callback: callback,
+        ),
+        errorText: controller.errorText.value,
+        isLoading: controller.isLoading.value,
+        isError: controller.isError.value,
+      );
+    });
   }
 }
 

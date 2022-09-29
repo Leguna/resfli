@@ -20,9 +20,9 @@ class HomeController extends GetxController {
     isError.value = false;
     try {
       var response = await restaurantService.getListRestaurant();
-      restaurantList.value = response?.restaurants ?? [];
-      errorText.value = response?.error ?? false ? response?.message ?? "" : "";
-      isError.value = response?.error ?? false;
+      restaurantList.value = response.restaurants;
+      errorText.value = response.error ?? false ? response.message ?? "" : "";
+      isError.value = response.error ?? false;
     } catch (e) {
       isError.value = true;
     }

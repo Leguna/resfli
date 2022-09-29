@@ -51,7 +51,7 @@ class GetDetailRestaurantResponse {
 }
 
 class Restaurant extends Equatable {
-  Restaurant({
+  const Restaurant({
     this.id,
     this.name,
     this.description,
@@ -64,16 +64,16 @@ class Restaurant extends Equatable {
     this.customerReviews,
   });
 
-  String? id;
-  String? name;
-  String? description;
-  String? city;
-  String? address;
-  String? pictureId;
-  List<Category>? categories;
-  Menus? menus;
-  double? rating;
-  List<CustomerReview?>? customerReviews;
+  final String? id;
+  final String? name;
+  final String? description;
+  final String? city;
+  final String? address;
+  final String? pictureId;
+  final List<Category>? categories;
+  final Menus? menus;
+  final double? rating;
+  final List<CustomerReview?>? customerReviews;
 
   Restaurant copyWith({
     String? id,

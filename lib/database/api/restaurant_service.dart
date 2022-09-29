@@ -8,10 +8,10 @@ class RestaurantService extends GetxService {
   final Dio _dio = ApiService.createDio();
   final _errorMessage = "Error! Check your Connection!";
 
-  Future<GetListRestaurantResponse?> getListRestaurant({
+  Future<GetListRestaurantResponse> getListRestaurant({
     int page = 1,
   }) async {
-    GetListRestaurantResponse? listRestaurant;
+    GetListRestaurantResponse listRestaurant;
     try {
       Response<dynamic> response = await _dio.get(
         '/list',
@@ -47,7 +47,7 @@ class RestaurantService extends GetxService {
         return GetDetailRestaurantResponse(
           error: true,
           message: _errorMessage,
-          restaurant: Restaurant(),
+          restaurant: const Restaurant(),
         );
       }
     }

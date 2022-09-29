@@ -55,7 +55,10 @@ class MyApp extends StatelessWidget {
           getPages: [
             GetPage(
               name: homeRoute,
-              page: () => Home(),
+              page: () => Home(
+                homeController: Get.find(),
+                favoriteController: Get.find(),
+              ),
               transition: Transition.fade,
             ),
             GetPage(
